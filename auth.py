@@ -3,13 +3,14 @@ import base64
 from dotenv import load_dotenv
 import os
 import requests
-import pandas as pd
+import json
 
 load_dotenv()
 
+ROOT_URL = "https://members-ng.iracing.com/data/results/get?subsession_id="
+session_id = 67471739
 AUTH_URL = "https://members-ng.iracing.com/auth"
-DATA_URL = "https://members-ng.iracing.com/data/results/get?subsession_id=67471739"
-CSV_FILE_PATH = "data.csv"
+DATA_URL = ROOT_URL + str(session_id)
 
 EMAIL = os.getenv('EMAIL')
 PASSWORD = os.getenv('PASSWORD')
@@ -68,10 +69,15 @@ try:
     
     data = data_response.json()
 
-    df = pd.DataFrame(data)
-    df.to_csv(CSV_FILE_PATH, index=False)
+    # Specify the file name
+    file_name = 'data.json'
+    
+    # Write the data to a JSON file
+    with open(file_name, 'w') as json_file:
+        json.dump(data, json_file, indent=4)
+    
+    print(f"Data successfully exported to {file_name}")
 
-    print(f"Data has been exported to {CSV_FILE_PATH}")
 
 except requests.exceptions.RequestException as e:
     print(f"An error occurred during the request: {e}")
