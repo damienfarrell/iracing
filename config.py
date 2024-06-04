@@ -18,10 +18,8 @@ DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD')
 DATABASE_DB = os.getenv('DATABASE_DB')
 
 # iRacing API settings
-ROOT_URL = "https://members-ng.iracing.com/data/results/get?subsession_id="
 AUTH_URL = "https://members-ng.iracing.com/auth"
-SESSION_ID = 67471739
-DATA_URL = f"{ROOT_URL}{SESSION_ID}"
+SUBSESSION_URL = "https://members-ng.iracing.com/data/results/get?subsession_id="
 EMAIL = os.getenv('EMAIL')
 PASSWORD = os.getenv('PASSWORD')
 

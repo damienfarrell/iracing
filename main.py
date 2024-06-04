@@ -1,33 +1,32 @@
 import logging
 import requests
-from database import create_ssh_tunnel, connect_mysql
-from data_processing import encode_pw, authenticate, fetch_data, import_to_db, test_db
-from config import EMAIL, PASSWORD, DATA_URL
+from import_data import import_race_data
+from get_data import encode_password, authenticate, fetch_session_data
+from config import EMAIL, PASSWORD, SUBSESSION_URL
+from menu import display_menu, get_session_parameters
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def main():
     try:
-        pw_value_to_submit = encode_pw(EMAIL, PASSWORD)
+        pw_value_to_submit = encode_password(EMAIL, PASSWORD)
         sso_cookie_value, auth_token = authenticate(EMAIL, pw_value_to_submit)
-        
         session = requests.Session()
         session.cookies.update({
             "irsso_membersv2": sso_cookie_value,
             "authtoken_members": f'{{"authtoken":{{"authcode":"{auth_token}","email":"{EMAIL}"}}}}'
         })
         
-        data = fetch_data(session, DATA_URL)
-
-        with create_ssh_tunnel() as tunnel:
-            tunnel.start()
-            print(f"SSH tunnel established. Local bind port: {tunnel.local_bind_port}")
-            conn = connect_mysql(tunnel)
-            if conn:
-                import_to_db(conn, data)
-                conn.close()
-                print("MySQL connection closed.")
-            tunnel.stop()
+        choice = display_menu()
+        if choice == "1":
+            session_url, race, group = get_session_parameters(SUBSESSION_URL)
+            logging.info(f"Session URL:{session_url} Race: {race} Group {group}")
+            data = fetch_session_data(session, session_url)
+            import_race_data(data, race, group)
+        elif choice == "2":
+            print("TBC option selected.")
+        else:
+            print("Invalid choice.")
 
     except requests.exceptions.RequestException as e:
         logging.error(f"An error occurred during the request: {e}")

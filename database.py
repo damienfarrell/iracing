@@ -12,8 +12,10 @@ def create_ssh_tunnel():
         remote_bind_address=(DATABASE_HOST, DATABASE_PORT)
     )
 
-def connect_mysql(tunnel):
+def connect_mysql():
     """Connect to the MySQL server through the SSH tunnel."""
+    tunnel = create_ssh_tunnel()
+    tunnel.start()
     try:
         conn = pymysql.connect(
             host=DATABASE_HOST,
