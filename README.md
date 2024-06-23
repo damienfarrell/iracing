@@ -1,13 +1,11 @@
 # iRacing Data Importer
 
-The iRacing Data Importer is a Python application designed to import race data from the iRacing platform into a MySQL database.
+The iRacing Data Importer is a Python API application designed to import race data from the iRacing platform into a MySQL database.
 
 ## Features
 
-- Authentication with the iRacing API using email and password credentials.
 - Fetch session data based on session ID from the iRacing API.
 - Import race results into a MySQL database.
-- Interactive menu for user interaction.
 
 ## Prerequisites
 
@@ -57,10 +55,8 @@ Before running the application, ensure you have the following installed:
 
 ## Usage
 
-1. Run the main.py script:
+1. Run the main.py API server:
 
     ```bash
-    python main.py
+    uvicorn app.main:app
     ```
-
-2. Follow the on-screen instructions to choose the desired action from the menu.
